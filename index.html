@@ -1,0 +1,517 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>КБЖУ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Onest:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink: #111;
+            --mute: #8a8a8a;
+            --line: #e8e8e8
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            background: #fff;
+            color: var(--ink);
+            font: 400 16px/1.4 Onest, system-ui, sans-serif
+        }
+
+        main {
+            max-width: 520px;
+            margin: 0 auto;
+            padding: 28px 20px 80px
+        }
+
+        #totals {
+            position: sticky;
+            top: 0;
+            background: #fff;
+            padding: 12px 0 16px;
+            border-bottom: 1px solid var(--line);
+            z-index: 2
+        }
+
+        #kcal {
+            font-size: 44px;
+            font-weight: 300;
+            letter-spacing: -.02em
+        }
+
+        #kcal small {
+            font-size: 15px;
+            color: var(--mute);
+            margin-left: 6px
+        }
+
+        .macros {
+            display: flex;
+            gap: 20px;
+            color: var(--mute);
+            font-size: 14px
+        }
+
+        .macros b {
+            color: var(--ink);
+            font-weight: 600
+        }
+
+        ul {
+            list-style: none;
+            margin: 0;
+            padding: 0
+        }
+
+        li.item {
+            padding: 18px 0;
+            border-bottom: 1px solid var(--line)
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 12px
+        }
+
+        .name {
+            font-weight: 600
+        }
+
+        .x {
+            border: 0;
+            background: none;
+            color: var(--mute);
+            font-size: 20px;
+            cursor: pointer;
+            padding: 0 4px
+        }
+
+        .sub {
+            color: var(--mute);
+            font-size: 13px;
+            margin: 2px 0 8px
+        }
+
+        .g {
+            font-variant-numeric: tabular-nums
+        }
+
+        input[type=range] {
+            width: 100%;
+            accent-color: var(--ink);
+            margin: 0
+        }
+
+        button.main {
+            margin-top: 24px;
+            width: 100%;
+            padding: 14px;
+            border: 1px solid var(--ink);
+            background: var(--ink);
+            color: #fff;
+            border-radius: 10px;
+            font: inherit;
+            cursor: pointer
+        }
+
+        button.main:focus-visible,
+        button:focus-visible,
+        input:focus-visible {
+            outline: 2px solid var(--ink);
+            outline-offset: 2px
+        }
+
+        #modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(255, 255, 255, .96);
+            overflow: auto;
+            z-index: 5
+        }
+
+        #modal[hidden] {
+            display: none
+        }
+
+        .sheet {
+            max-width: 520px;
+            margin: 0 auto;
+            padding: 24px 20px
+        }
+
+        .bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 12px
+        }
+
+        input[type=text],
+        input[type=number] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            font: inherit;
+            background: #fff
+        }
+
+        .plus,
+        .close {
+            flex: none;
+            width: 46px;
+            border: 1px solid var(--line);
+            background: #fff;
+            border-radius: 10px;
+            font-size: 22px;
+            cursor: pointer
+        }
+
+        .pick {
+            display: block;
+            width: 100%;
+            text-align: left;
+            padding: 14px 0;
+            border: 0;
+            border-bottom: 1px solid var(--line);
+            background: none;
+            font: inherit;
+            cursor: pointer
+        }
+
+        .pick span {
+            color: var(--mute);
+            font-size: 13px;
+            display: block
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            color: var(--mute);
+            margin: 14px 0 4px
+        }
+
+        .chk {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-top: 14px;
+            font-size: 14px;
+            color: var(--ink)
+        }
+
+        .gear {
+            position: absolute;
+            right: 0;
+            top: 14px;
+            width: 36px;
+            height: 36px;
+            border: 1px solid var(--line);
+            background: #fff;
+            border-radius: 10px;
+            cursor: pointer;
+            display: grid;
+            place-items: center
+        }
+
+        #settings {
+            position: absolute;
+            right: 0;
+            top: 56px;
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 14px;
+            width: 210px;
+            font-size: 13px;
+            color: var(--mute)
+        }
+
+        #settings[hidden] {
+            display: none
+        }
+
+        .seg {
+            display: flex;
+            gap: 6px;
+            margin-top: 8px
+        }
+
+        .seg button {
+            flex: 1;
+            padding: 8px 0;
+            border: 1px solid var(--line);
+            background: #fff;
+            border-radius: 8px;
+            font: inherit;
+            font-size: 14px;
+            color: var(--ink);
+            cursor: pointer
+        }
+
+        .seg button.on {
+            background: var(--ink);
+            color: #fff;
+            border-color: var(--ink)
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 4px;
+            margin-top: 10px
+        }
+
+        .steps button {
+            padding: 8px 0;
+            border: 1px solid var(--line);
+            background: #fff;
+            border-radius: 8px;
+            font: inherit;
+            font-size: 13px;
+            color: var(--ink);
+            cursor: pointer;
+            font-variant-numeric: tabular-nums
+        }
+
+        .steps button:active {
+            background: var(--line)
+        }
+
+        .msg {
+            color: var(--mute);
+            padding: 20px 0;
+            font-size: 14px
+        }
+
+        #err {
+            color: #b00020;
+            font-size: 14px;
+            padding-top: 12px
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <div id="totals">
+            <button class="gear" id="gear" aria-label="Настройки"><svg width="16" height="16" viewBox="0 0 16 16"
+                    fill="none" stroke="#111" stroke-width="1.5" stroke-linecap="round">
+                    <path d="M2 4h12M2 8h12M2 12h12" />
+                    <circle cx="10" cy="4" r="1.6" fill="#fff" />
+                    <circle cx="5" cy="8" r="1.6" fill="#fff" />
+                    <circle cx="11" cy="12" r="1.6" fill="#fff" />
+                </svg></button>
+            <div id="settings" hidden>
+                <div>Шаг ползунка, г</div>
+                <div class="seg" id="seg"></div>
+                <div style="margin-top:14px">Максимум ползунка, г</div>
+                <div class="seg" id="segMax"></div>
+            </div>
+            <div id="kcal">0<small>ккал</small></div>
+            <div class="macros"><span>Б <b id="tp">0</b></span><span>Ж <b id="tf">0</b></span><span>У <b
+                        id="tc">0</b></span></div>
+        </div>
+        <ul id="list"></ul>
+        <div id="err"></div>
+        <button class="main" id="add">Добавить продукт</button>
+    </main>
+
+    <div id="modal" hidden>
+        <div class="sheet" id="sheet"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+    <script>
+        // ВСТАВЬТЕ СВОИ ДАННЫЕ: Supabase → Project Settings → API
+        const SUPABASE_URL = 'https://xdlwpxkurrpngqvlqsto.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_0nnLD5E0kiqWIjHN9mj9Ew_v6ES2c6Z';
+
+        const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        const today = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+        let products = [], entries = [], step = 5, limit = 500;
+        const $ = id => document.getElementById(id);
+        const r1 = n => Math.round(n * 10) / 10;
+        const showErr = e => { $('err').textContent = e ? 'Ошибка: ' + (e.message || e) : ''; };
+
+        function el(tag, props = {}, ...kids) {
+            const n = Object.assign(document.createElement(tag), props);
+            kids.forEach(k => n.append(k));
+            return n;
+        }
+        const prod = id => products.find(p => p.id === id);
+
+        // ---------- данные ----------
+        async function init() {
+            try {
+                const { data: { session } } = await db.auth.getSession();
+                if (!session) { const { error } = await db.auth.signInAnonymously(); if (error) throw error; }
+                const { data: { user } } = await db.auth.getUser();
+                step = [1, 5, 10].includes(user?.user_metadata?.step) ? user.user_metadata.step : 5;
+                limit = [500, 1000, 1500, 2000].includes(user?.user_metadata?.max) ? user.user_metadata.max : 500;
+                renderSeg();
+                const a = await db.from('products').select('*').order('name');
+                if (a.error) throw a.error; products = a.data;
+                const b = await db.from('entries').select('*').eq('day', today).order('created_at');
+                if (b.error) throw b.error; entries = b.data;
+                render();
+            } catch (e) { showErr(e); }
+        }
+
+        async function addEntry(p) {
+            const { data, error } = await db.from('entries').insert({ product_id: p.id, day: today, grams: 100 }).select().single();
+            if (error) return showErr(error);
+            entries.push(data); render(); closeModal();
+        }
+        const timers = {};
+        function saveGrams(e) {
+            clearTimeout(timers[e.id]);
+            timers[e.id] = setTimeout(async () => {
+                const { error } = await db.from('entries').update({ grams: e.grams }).eq('id', e.id);
+                showErr(error);
+            }, 400);
+        }
+        async function removeEntry(e) {
+            const { error } = await db.from('entries').delete().eq('id', e.id);
+            if (error) return showErr(error);
+            entries = entries.filter(x => x.id !== e.id); render();
+        }
+
+        // ---------- главный экран ----------
+        function totals() {
+            let k = 0, p = 0, f = 0, c = 0;
+            entries.forEach(e => {
+                const q = prod(e.product_id); if (!q) return; const m = e.grams / 100;
+                k += q.kcal * m; p += q.p * m; f += q.f * m; c += q.c * m;
+            });
+            $('kcal').firstChild.nodeValue = Math.round(k);
+            $('tp').textContent = r1(p); $('tf').textContent = r1(f); $('tc').textContent = r1(c);
+        }
+        function portionText(q, g) {
+            const m = g / 100;
+            return `${Math.round(q.kcal * m)} ккал · Б ${r1(q.p * m)} · Ж ${r1(q.f * m)} · У ${r1(q.c * m)}`;
+        }
+
+        function render() {
+            const ul = $('list'); ul.replaceChildren();
+            entries.forEach(e => {
+                const q = prod(e.product_id); if (!q) return;
+                const gEl = el('span', { className: 'g', textContent: e.grams + ' г' });
+                const sub = el('div', { className: 'sub', textContent: portionText(q, e.grams) });
+                const slider = el('input', { type: 'range', min: 0, max: Math.max(limit, e.grams), step, value: e.grams, ariaLabel: 'Граммы' });
+                const set = v => {
+                    e.grams = Math.max(0, Math.min(limit, Math.round(v)));
+                    slider.max = Math.max(limit, e.grams); slider.value = e.grams;
+                    gEl.textContent = e.grams + ' г'; sub.textContent = portionText(q, e.grams);
+                    totals(); saveGrams(e);
+                };
+                slider.oninput = () => set(+slider.value);
+                const btns = el('div', { className: 'steps' });
+                [-100, -50, -20, -5, -1, 1, 5, 20, 50, 100].forEach(d => {
+                    const b = el('button', { type: 'button', textContent: (d > 0 ? '+' : '\u2212') + Math.abs(d) });
+                    b.onclick = () => set(e.grams + d); btns.append(b);
+                });
+                const x = el('button', { className: 'x', textContent: '×', ariaLabel: 'Убрать' });
+                x.onclick = () => removeEntry(e);
+                ul.append(el('li', { className: 'item' },
+                    el('div', { className: 'row' }, el('span', { className: 'name', textContent: q.name }), el('span', {}, gEl, x)),
+                    sub, slider, btns));
+            });
+            totals();
+        }
+
+        // ---------- настройки ----------
+        function renderSeg() {
+            const build = (id, opts, cur, onPick) => {
+                const seg = $(id); seg.replaceChildren();
+                opts.forEach(v => {
+                    const b = el('button', { type: 'button', textContent: v, className: v === cur ? 'on' : '' });
+                    b.onclick = async () => {
+                        onPick(v); renderSeg(); render();
+                        const { error } = await db.auth.updateUser({ data: { step, max: limit } }); showErr(error);
+                    };
+                    seg.append(b);
+                });
+            };
+            build('seg', [1, 5, 10], step, v => step = v);
+            build('segMax', [500, 1000, 1500, 2000], limit, v => limit = v);
+        }
+        $('gear').onclick = () => { $('settings').hidden = !$('settings').hidden; };
+        document.addEventListener('click', e => { if (!e.target.closest('#settings, #gear')) $('settings').hidden = true; });
+
+        // ---------- модальное окно ----------
+        function openModal() { $('modal').hidden = false; viewSearch(); }
+        function closeModal() { $('modal').hidden = true; }
+
+        function viewSearch() {
+            const sheet = $('sheet'); sheet.replaceChildren();
+            const q = el('input', { type: 'text', placeholder: 'Поиск продукта', ariaLabel: 'Поиск' });
+            const plus = el('button', { className: 'plus', textContent: '+', ariaLabel: 'Создать продукт' });
+            const close = el('button', { className: 'close', textContent: '×', ariaLabel: 'Закрыть' });
+            const list = el('div');
+            plus.onclick = viewCreate; close.onclick = closeModal;
+            const fill = () => {
+                list.replaceChildren();
+                const s = q.value.trim().toLowerCase();
+                const found = products.filter(p => p.name.toLowerCase().includes(s));
+                if (!found.length) { list.append(el('div', { className: 'msg', textContent: products.length ? 'Ничего не найдено' : 'Продуктов пока нет. Нажмите +, чтобы создать первый.' })); return; }
+                found.forEach(p => {
+                    const b = el('button', { className: 'pick', textContent: p.name }, el('span', { textContent: `${p.kcal} ккал · Б ${p.p} · Ж ${p.f} · У ${p.c} на 100 г` }));
+                    b.onclick = () => addEntry(p); list.append(b);
+                });
+            };
+            q.oninput = fill;
+            sheet.append(el('div', { className: 'bar' }, q, plus, close), list);
+            fill(); q.focus();
+        }
+
+        function viewCreate() {
+            const sheet = $('sheet'); sheet.replaceChildren();
+            const f = {};
+            const field = (key, label, type = 'number') => {
+                f[key] = el('input', { type, step: '0.1', min: 0, inputMode: type === 'number' ? 'decimal' : 'text' });
+                sheet.append(el('label', { textContent: label }), f[key]);
+            };
+            sheet.append(el('div', { className: 'bar' }, el('strong', { textContent: 'Новый продукт', style: 'flex:1;align-self:center' }),
+                Object.assign(el('button', { className: 'close', textContent: '×', ariaLabel: 'Назад' }), { onclick: viewSearch })));
+            field('name', 'Название', 'text'); field('p', 'Белки, г на 100 г'); field('f', 'Жиры, г на 100 г'); field('c', 'Углеводы, г на 100 г'); field('kcal', 'Калории, ккал на 100 г');
+            const auto = el('input', { type: 'checkbox', checked: true });
+            sheet.append(el('label', { className: 'chk' }, auto, 'Считать калории автоматически (4·Б + 9·Ж + 4·У)'));
+            const calc = () => { f.kcal.value = r1(4 * (+f.p.value || 0) + 9 * (+f.f.value || 0) + 4 * (+f.c.value || 0)) || ''; };
+            [f.p, f.f, f.c].forEach(i => i.oninput = () => { if (auto.checked) calc(); });
+            auto.onchange = () => {
+                f.kcal.readOnly = auto.checked;
+                if (auto.checked) calc(); else { f.kcal.value = ''; f.kcal.focus(); }
+            };
+            f.kcal.readOnly = true; calc();
+            const save = el('button', { className: 'main', textContent: 'Сохранить' });
+            const msg = el('div', { id: 'err' });
+            save.onclick = async () => {
+                const name = f.name.value.trim();
+                if (!name) { msg.textContent = 'Введите название'; return; }
+                const row = { name, p: +f.p.value || 0, f: +f.f.value || 0, c: +f.c.value || 0, kcal: +f.kcal.value || 0 };
+                save.disabled = true;
+                const { data, error } = await db.from('products').insert(row).select().single();
+                save.disabled = false;
+                if (error) { msg.textContent = 'Ошибка: ' + error.message; return; }
+                products.push(data); products.sort((a, b) => a.name.localeCompare(b.name, 'ru'));
+                viewSearch();
+            };
+            sheet.append(msg, save); f.name.focus();
+        }
+
+        $('add').onclick = openModal;
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+        init();
+    </script>
+</body>
+
+</html>
