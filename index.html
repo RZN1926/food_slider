@@ -5,6 +5,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>КБЖУ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Onest:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -603,17 +605,20 @@
                 let user = await new Promise(r => { const un = auth.onAuthStateChanged(x => { un(); r(x); }); });
                 if (!user) user = (await auth.signInAnonymously()).user;
                 uid = user.uid; renderAcc();
-                const md = (await meta().get()).data() || {};
-                meals = ['Завтрак', 'Обед', 'Ужин'];
-                step = [1, 5, 10].includes(md.step) ? md.step : 5;
-                limit = [500, 1000, 1500, 2000].includes(md.max) ? md.max : 500;
-                mealsOn = !!md.meals_on; if (Array.isArray(md.meals) && md.meals.length) meals = md.meals; plan = md.plan || null;
-                $('swMeals').checked = mealsOn; fillPlan(); renderSeg();
-                const a = await col('products').get();
-                products = a.docs.map(d => ({ id: d.id, ...d.data() })).sort((x, y) => x.name.localeCompare(y.name, 'ru'));
-                const b = await col('entries').where('day', '==', today).get();
-                entries = b.docs.map(d => ({ id: d.id, ...d.data() })).sort((x, y) => (x.created || 0) - (y.created || 0));
-                render();
+                const load = o => Promise.all([meta().get(o), col('products').get(o), col('entries').where('day', '==', today).get(o)]);
+                const apply = ([m, a, b]) => {
+                    const md = m.data() || {};
+                    meals = ['Завтрак', 'Обед', 'Ужин'];
+                    step = [1, 5, 10].includes(md.step) ? md.step : 5;
+                    limit = [500, 1000, 1500, 2000].includes(md.max) ? md.max : 500;
+                    mealsOn = !!md.meals_on; if (Array.isArray(md.meals) && md.meals.length) meals = md.meals; plan = md.plan || null;
+                    $('swMeals').checked = mealsOn; fillPlan(); renderSeg();
+                    products = a.docs.map(d => ({ id: d.id, ...d.data() })).sort((x, y) => x.name.localeCompare(y.name, 'ru'));
+                    entries = b.docs.map(d => ({ id: d.id, ...d.data() })).sort((x, y) => (x.created || 0) - (y.created || 0));
+                    render();
+                };
+                try { apply(await load({ source: 'cache' })); } catch (e) { }   // мгновенно из локального кэша
+                apply(await load());                                      // затем свежие данные с сервера
             } catch (e) { showErr(e); }
         }
 
