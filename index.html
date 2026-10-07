@@ -286,6 +286,213 @@
             background: var(--line)
         }
 
+        .panel {
+            max-height: 75vh;
+            overflow: auto
+        }
+
+        #settings {
+            width: 260px
+        }
+
+        #report {
+            position: absolute;
+            right: 0;
+            top: 56px;
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 14px;
+            width: 240px;
+            font-size: 13px;
+            color: var(--mute)
+        }
+
+        #report[hidden] {
+            display: none
+        }
+
+        .lbl {
+            margin-top: 14px
+        }
+
+        .srow {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-top: 16px;
+            color: var(--ink);
+            font-size: 14px
+        }
+
+        .sw {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 38px;
+            height: 22px;
+            border-radius: 11px;
+            background: #d4d4d4;
+            position: relative;
+            cursor: pointer;
+            flex: none;
+            margin: 0
+        }
+
+        .sw::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #fff;
+            transition: left .15s
+        }
+
+        .sw:checked {
+            background: var(--ink)
+        }
+
+        .sw:checked::after {
+            left: 18px
+        }
+
+        .plain {
+            margin-top: 14px;
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--line);
+            background: #fff;
+            border-radius: 10px;
+            font: inherit;
+            font-size: 14px;
+            color: var(--ink);
+            cursor: pointer
+        }
+
+        .pg {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+            margin-top: 10px
+        }
+
+        .pg input {
+            padding: 9px;
+            font-size: 14px
+        }
+
+        .fmt {
+            display: block;
+            width: 100%;
+            text-align: left;
+            margin-top: 8px;
+            padding: 10px 12px;
+            border: 1px solid var(--line);
+            background: #fff;
+            border-radius: 10px;
+            font: inherit;
+            font-size: 14px;
+            color: var(--ink);
+            cursor: pointer
+        }
+
+        .div {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 22px
+        }
+
+        .div::before,
+        .div::after {
+            content: '';
+            flex: 1;
+            border-top: 1px solid var(--line)
+        }
+
+        .pill {
+            padding: 7px 14px;
+            border: 1px dashed #bbb;
+            background: #fff;
+            border-radius: 10px;
+            font: inherit;
+            font-size: 13px;
+            color: var(--mute);
+            cursor: pointer
+        }
+
+        .mh {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 14px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: .14em;
+            text-transform: uppercase
+        }
+
+        .acts {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px
+        }
+
+        .steps {
+            display: flex;
+            gap: 3px;
+            margin-top: 10px
+        }
+
+        .steps button {
+            flex: 1;
+            min-width: 0;
+            padding: 8px 0;
+            font-size: 12px
+        }
+
+        .steps button:nth-child(6) {
+            margin-left: 14px
+        }
+
+        .ov {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .28);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 8;
+            padding: 16px
+        }
+
+        .ov[hidden] {
+            display: none
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 14px;
+            padding: 20px;
+            width: min(340px, 100%);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, .15);
+            font-size: 15px
+        }
+
+        .prow {
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid var(--line)
+        }
+
+        .prow .pick {
+            border: 0;
+            flex: 1
+        }
+
         .msg {
             color: var(--mute);
             padding: 20px 0;
@@ -303,6 +510,11 @@
 <body>
     <main>
         <div id="totals">
+            <button class="gear" id="rbtn" style="right:44px" aria-label="Скачать отчёт"><svg width="16" height="16"
+                    viewBox="0 0 16 16" fill="none" stroke="#111" stroke-width="1.5" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="M8 2v8M4.5 7 8 10.5 11.5 7M3 13.5h10" />
+                </svg></button>
             <button class="gear" id="gear" aria-label="Настройки"><svg width="16" height="16" viewBox="0 0 16 16"
                     fill="none" stroke="#111" stroke-width="1.5" stroke-linecap="round">
                     <path d="M2 4h12M2 8h12M2 12h12" />
@@ -310,34 +522,67 @@
                     <circle cx="5" cy="8" r="1.6" fill="#fff" />
                     <circle cx="11" cy="12" r="1.6" fill="#fff" />
                 </svg></button>
-            <div id="settings" hidden>
+            <div id="settings" class="panel" hidden>
                 <div>Шаг ползунка, г</div>
                 <div class="seg" id="seg"></div>
-                <div style="margin-top:14px">Максимум ползунка, г</div>
+                <div class="lbl">Максимум ползунка, г</div>
                 <div class="seg" id="segMax"></div>
+                <label class="srow"><span>Разделять по приёмам пищи</span><input type="checkbox" class="sw"
+                        id="swMeals"></label>
+                <button class="plain" id="planBtn">Добавить свой план</button>
             </div>
-            <div id="kcal">0<small>ккал</small></div>
-            <div class="macros"><span>Б <b id="tp">0</b></span><span>Ж <b id="tf">0</b></span><span>У <b
-                        id="tc">0</b></span></div>
+            <div id="report" hidden>
+                <div>Скачать отчёт за сегодня</div>
+                <div id="fmts"></div>
+            </div>
+            <div id="kcal"><span id="tk">0</span><small id="kp">ккал</small></div>
+            <div class="macros"><span>Б <b id="tp">0</b><span id="tpx"></span></span><span>Ж <b id="tf">0</b><span
+                        id="tfx"></span></span><span>У <b id="tc">0</b><span id="tcx"></span></span></div>
         </div>
-        <ul id="list"></ul>
+        <div id="list"></div>
         <div id="err"></div>
         <button class="main" id="add">Добавить продукт</button>
     </main>
+
+    <div class="ov" id="pmodal" hidden>
+        <div class="card">
+            <strong>Свой план на день</strong>
+            <div class="pg"><input type="number" id="inK" placeholder="Ккал" min="0"><input type="number" id="inP"
+                    placeholder="Белки, г" min="0"><input type="number" id="inF" placeholder="Жиры, г" min="0"><input
+                    type="number" id="inC" placeholder="Углеводы, г" min="0"></div>
+            <div class="pg"><button class="plain" id="planSave"
+                    style="margin:0;background:#111;color:#fff">Сохранить</button><button class="plain" id="planCancel"
+                    style="margin:0">Отмена</button></div>
+            <button class="plain" id="planClear" style="color:#b00020">Убрать</button>
+        </div>
+    </div>
+    <div class="ov" id="cmodal" style="z-index:9" hidden>
+        <div class="card">
+            <div id="ctext"></div>
+            <div class="pg"><button class="plain" id="cno" style="margin:0">Отмена</button><button class="plain"
+                    id="cyes" style="margin:0;background:#b00020;color:#fff;border-color:#b00020">Убрать</button></div>
+        </div>
+    </div>
 
     <div id="modal" hidden>
         <div class="sheet" id="sheet"></div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script src="config.js"></script>
     <script>
-        // ВСТАВЬТЕ СВОИ ДАННЫЕ: Supabase → Project Settings → API
-        const SUPABASE_URL = 'https://xdlwpxkurrpngqvlqsto.supabase.co';
-        const SUPABASE_KEY = 'sb_publishable_0nnLD5E0kiqWIjHN9mj9Ew_v6ES2c6Z';
-
-        const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        // Конфиг лежит в отдельном файле config.js (рядом с index.html)
+        if (typeof firebaseConfig === 'undefined') { document.body.textContent = 'Не найден config.js с настройками Firebase'; throw new Error('config.js missing'); }
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth(), fs = firebase.firestore();
+        fs.enablePersistence({ synchronizeTabs: true }).catch(() => { });
+        let uid = null;
+        const meta = () => fs.collection('users').doc(uid);
+        const col = n => meta().collection(n);
         const today = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 10);
-        let products = [], entries = [], step = 5, limit = 500;
+        let products = [], entries = [], step = 5, limit = 500, mealsOn = false, meals = ['Завтрак', 'Обед', 'Ужин'], plan = null, curMeal = null;
         const $ = id => document.getElementById(id);
         const r1 = n => Math.round(n * 10) / 10;
         const showErr = e => { $('err').textContent = e ? 'Ошибка: ' + (e.message || e) : ''; };
@@ -352,37 +597,36 @@
         // ---------- данные ----------
         async function init() {
             try {
-                const { data: { session } } = await db.auth.getSession();
-                if (!session) { const { error } = await db.auth.signInAnonymously(); if (error) throw error; }
-                const { data: { user } } = await db.auth.getUser();
-                step = [1, 5, 10].includes(user?.user_metadata?.step) ? user.user_metadata.step : 5;
-                limit = [500, 1000, 1500, 2000].includes(user?.user_metadata?.max) ? user.user_metadata.max : 500;
-                renderSeg();
-                const a = await db.from('products').select('*').order('name');
-                if (a.error) throw a.error; products = a.data;
-                const b = await db.from('entries').select('*').eq('day', today).order('created_at');
-                if (b.error) throw b.error; entries = b.data;
+                let user = await new Promise(r => { const un = auth.onAuthStateChanged(x => { un(); r(x); }); });
+                if (!user) user = (await auth.signInAnonymously()).user;
+                uid = user.uid;
+                const md = (await meta().get()).data() || {};
+                step = [1, 5, 10].includes(md.step) ? md.step : 5;
+                limit = [500, 1000, 1500, 2000].includes(md.max) ? md.max : 500;
+                mealsOn = !!md.meals_on; if (Array.isArray(md.meals) && md.meals.length) meals = md.meals; plan = md.plan || null;
+                $('swMeals').checked = mealsOn; fillPlan(); renderSeg();
+                const a = await col('products').get();
+                products = a.docs.map(d => ({ id: d.id, ...d.data() })).sort((x, y) => x.name.localeCompare(y.name, 'ru'));
+                const b = await col('entries').where('day', '==', today).get();
+                entries = b.docs.map(d => ({ id: d.id, ...d.data() })).sort((x, y) => (x.created || 0) - (y.created || 0));
                 render();
             } catch (e) { showErr(e); }
         }
 
-        async function addEntry(p) {
-            const { data, error } = await db.from('entries').insert({ product_id: p.id, day: today, grams: 100 }).select().single();
-            if (error) return showErr(error);
-            entries.push(data); render(); closeModal();
+        function addEntry(p) {
+            const data = { product_id: p.id, day: today, grams: 100, created: Date.now(), ...(mealsOn ? { meal: curMeal || meals[0] } : {}) };
+            const ref = col('entries').doc();
+            entries.push({ id: ref.id, ...data }); render(); closeModal();
+            ref.set(data).catch(showErr);
         }
         const timers = {};
         function saveGrams(e) {
             clearTimeout(timers[e.id]);
-            timers[e.id] = setTimeout(async () => {
-                const { error } = await db.from('entries').update({ grams: e.grams }).eq('id', e.id);
-                showErr(error);
-            }, 400);
+            timers[e.id] = setTimeout(() => col('entries').doc(e.id).update({ grams: e.grams }).catch(showErr), 400);
         }
-        async function removeEntry(e) {
-            const { error } = await db.from('entries').delete().eq('id', e.id);
-            if (error) return showErr(error);
+        function removeEntry(e) {
             entries = entries.filter(x => x.id !== e.id); render();
+            col('entries').doc(e.id).delete().catch(showErr);
         }
 
         // ---------- главный экран ----------
@@ -392,63 +636,180 @@
                 const q = prod(e.product_id); if (!q) return; const m = e.grams / 100;
                 k += q.kcal * m; p += q.p * m; f += q.f * m; c += q.c * m;
             });
-            $('kcal').firstChild.nodeValue = Math.round(k);
-            $('tp').textContent = r1(p); $('tf').textContent = r1(f); $('tc').textContent = r1(c);
+            $('tk').textContent = Math.round(k);
+            $('kp').textContent = plan ? ` / ${plan.kcal} ккал` : ' ккал';
+            [['tp', p, 'p'], ['tf', f, 'f'], ['tc', c, 'c']].forEach(([id, v, key]) => {
+                $(id).textContent = r1(v); $(id + 'x').textContent = plan ? ` / ${plan[key]}` : '';
+            });
         }
         function portionText(q, g) {
             const m = g / 100;
             return `${Math.round(q.kcal * m)} ккал · Б ${r1(q.p * m)} · Ж ${r1(q.f * m)} · У ${r1(q.c * m)}`;
         }
 
-        function render() {
-            const ul = $('list'); ul.replaceChildren();
-            entries.forEach(e => {
-                const q = prod(e.product_id); if (!q) return;
-                const gEl = el('span', { className: 'g', textContent: e.grams + ' г' });
-                const sub = el('div', { className: 'sub', textContent: portionText(q, e.grams) });
-                const slider = el('input', { type: 'range', min: 0, max: Math.max(limit, e.grams), step, value: e.grams, ariaLabel: 'Граммы' });
-                const set = v => {
-                    e.grams = Math.max(0, Math.min(limit, Math.round(v)));
-                    slider.max = Math.max(limit, e.grams); slider.value = e.grams;
-                    gEl.textContent = e.grams + ' г'; sub.textContent = portionText(q, e.grams);
-                    totals(); saveGrams(e);
-                };
-                slider.oninput = () => set(+slider.value);
-                const btns = el('div', { className: 'steps' });
-                [-100, -50, -20, -5, -1, 1, 5, 20, 50, 100].forEach(d => {
-                    const b = el('button', { type: 'button', textContent: (d > 0 ? '+' : '\u2212') + Math.abs(d) });
-                    b.onclick = () => set(e.grams + d); btns.append(b);
-                });
-                const x = el('button', { className: 'x', textContent: '×', ariaLabel: 'Убрать' });
-                x.onclick = () => removeEntry(e);
-                ul.append(el('li', { className: 'item' },
-                    el('div', { className: 'row' }, el('span', { className: 'name', textContent: q.name }), el('span', {}, gEl, x)),
-                    sub, slider, btns));
+        function item(e) {
+            const q = prod(e.product_id); if (!q) return null;
+            const gEl = el('span', { className: 'g', textContent: e.grams + ' г' });
+            const sub = el('div', { className: 'sub', textContent: portionText(q, e.grams) });
+            const slider = el('input', { type: 'range', min: 0, max: Math.max(limit, e.grams), step, value: e.grams, ariaLabel: 'Граммы' });
+            const set = v => {
+                e.grams = Math.max(0, Math.min(limit, Math.round(v)));
+                slider.max = Math.max(limit, e.grams); slider.value = e.grams;
+                gEl.textContent = e.grams + ' г'; sub.textContent = portionText(q, e.grams);
+                totals(); saveGrams(e);
+            };
+            slider.oninput = () => set(+slider.value);
+            const btns = el('div', { className: 'steps' });
+            [-100, -50, -20, -5, -1, 1, 5, 20, 50, 100].forEach(d => {
+                const b = el('button', { type: 'button', textContent: (d > 0 ? '+' : '\u2212') + Math.abs(d) });
+                b.onclick = () => set(e.grams + d); btns.append(b);
             });
-            totals();
+            const x = el('button', { className: 'x', textContent: '×', ariaLabel: 'Убрать' });
+            x.onclick = () => removeEntry(e);
+            return el('li', { className: 'item' },
+                el('div', { className: 'row' }, el('span', { className: 'name', textContent: q.name }), el('span', {}, gEl, x)),
+                sub, slider, btns);
+        }
+        function itemsUl(list) { const ul = el('ul'); list.forEach(e => { const li = item(e); if (li) ul.append(li); }); return ul; }
+
+        function render() {
+            const box = $('list'); box.replaceChildren(); $('add').hidden = mealsOn;
+            if (!mealsOn) { box.append(itemsUl(entries)); totals(); return; }
+            const divider = i => {
+                const b = el('button', { type: 'button', className: 'pill', textContent: '+ добавить приём' });
+                b.onclick = () => {
+                    const n = (prompt('Название приёма пищи') || '').trim();
+                    if (!n || meals.includes(n)) return; meals.splice(i, 0, n); render(); saveMeta();
+                };
+                return el('div', { className: 'div' }, b);
+            };
+            meals.forEach((m, i) => {
+                box.append(divider(i));
+                const mine = entries.filter(e => (meals.includes(e.meal) ? e.meal : meals[0]) === m);
+                const head = el('div', { className: 'mh' }, el('span', { textContent: m }));
+                if (!mine.length && meals.length > 1) {
+                    const x = el('button', { className: 'x', textContent: '×', ariaLabel: 'Удалить приём' });
+                    x.onclick = () => { meals.splice(i, 1); render(); saveMeta(); }; head.append(x);
+                }
+                const manual = el('button', { type: 'button', className: 'pill', textContent: '+ вручную' });
+                const search = el('button', { type: 'button', className: 'pill', textContent: 'поиск по базе' });
+                manual.onclick = () => openModal(m, true); search.onclick = () => openModal(m);
+                box.append(head, itemsUl(mine), el('div', { className: 'acts' }, manual, search));
+            });
+            box.append(divider(meals.length)); totals();
         }
 
         // ---------- настройки ----------
+        const saveMeta = () => meta().set({ step, max: limit, meals_on: mealsOn, meals, plan: plan || null }, { merge: true }).catch(showErr);
         function renderSeg() {
             const build = (id, opts, cur, onPick) => {
                 const seg = $(id); seg.replaceChildren();
                 opts.forEach(v => {
                     const b = el('button', { type: 'button', textContent: v, className: v === cur ? 'on' : '' });
-                    b.onclick = async () => {
-                        onPick(v); renderSeg(); render();
-                        const { error } = await db.auth.updateUser({ data: { step, max: limit } }); showErr(error);
-                    };
+                    b.onclick = () => { onPick(v); renderSeg(); render(); saveMeta(); };
                     seg.append(b);
                 });
             };
             build('seg', [1, 5, 10], step, v => step = v);
             build('segMax', [500, 1000, 1500, 2000], limit, v => limit = v);
         }
-        $('gear').onclick = () => { $('settings').hidden = !$('settings').hidden; };
-        document.addEventListener('click', e => { if (!e.target.closest('#settings, #gear')) $('settings').hidden = true; });
+        function fillPlan() {
+            [['inK', 'kcal'], ['inP', 'p'], ['inF', 'f'], ['inC', 'c']].forEach(([id, k]) => $(id).value = plan ? plan[k] : '');
+            $('planClear').hidden = !plan; $('planBtn').textContent = plan ? 'Изменить свой план' : 'Добавить свой план';
+        }
+        $('swMeals').onchange = () => { mealsOn = $('swMeals').checked; render(); saveMeta(); };
+        const openPlan = () => { toggle(null); fillPlan(); $('pmodal').hidden = false; $('inK').focus(); };
+        $('planBtn').onclick = openPlan;
+        $('planCancel').onclick = () => { $('pmodal').hidden = true; };
+        $('planSave').onclick = () => {
+            const v = id => +$(id).value || 0, n = { kcal: v('inK'), p: v('inP'), f: v('inF'), c: v('inC') };
+            plan = (n.kcal || n.p || n.f || n.c) ? n : null; fillPlan(); $('pmodal').hidden = true; totals(); saveMeta();
+        };
+        function ask(text, yes, label = 'Убрать') {
+            $('ctext').textContent = text; $('cyes').textContent = label; $('cmodal').hidden = false;
+            $('cyes').onclick = () => { $('cmodal').hidden = true; yes(); };
+        }
+        $('cno').onclick = () => { $('cmodal').hidden = true; };
+        $('planClear').onclick = () => ask('Убрать свой план?', () => { plan = null; fillPlan(); $('pmodal').hidden = true; totals(); saveMeta(); });
+        ['pmodal', 'cmodal'].forEach(id => $(id).onclick = e => { if (e.target === $(id)) $(id).hidden = true; });
+        const toggle = id => ['settings', 'report'].forEach(p => $(p).hidden = p === id ? !$(p).hidden : true);
+        document.addEventListener('click', e => {
+            if (!e.composedPath().some(n => ['settings', 'report', 'gear', 'rbtn'].includes(n.id))) toggle(null);
+        });
+        $('gear').onclick = () => toggle('settings'); $('rbtn').onclick = () => toggle('report');
+
+        // ---------- отчёт ----------
+        const esc = t => String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+        const sum = rows => rows.reduce((a, r) => ({ k: a.k + r.k, p: a.p + r.p, f: a.f + r.f, c: a.c + r.c }), { k: 0, p: 0, f: 0, c: 0 });
+        function repData() {
+            const rows = entries.map(e => {
+                const q = prod(e.product_id); if (!q) return null; const m = e.grams / 100;
+                return { meal: e.meal, name: q.name, g: e.grams, k: Math.round(q.kcal * m), p: r1(q.p * m), f: r1(q.f * m), c: r1(q.c * m) };
+            }).filter(Boolean);
+            const groups = mealsOn ? meals.map(m => ({ title: m, rows: rows.filter(r => (meals.includes(r.meal) ? r.meal : meals[0]) === m) })) : [{ title: null, rows }];
+            return { groups, t: sum(rows) };
+        }
+        const of = (v, k) => plan ? `${v} из ${plan[k]}` : `${v}`;
+        const line = t => `${of(Math.round(t.k), 'kcal')} ккал · Б ${of(r1(t.p), 'p')} · Ж ${of(r1(t.f), 'f')} · У ${of(r1(t.c), 'c')}`;
+        const mini = t => `${Math.round(t.k)} ккал · Б ${r1(t.p)} · Ж ${r1(t.f)} · У ${r1(t.c)}`;
+        const mk = {
+            md(d) {
+                let o = `# КБЖУ за ${today}\n\n**Итого:** ${line(d.t)}\n`;
+                d.groups.forEach(g => {
+                    o += g.title ? `\n## ${g.title}\n` : '';
+                    if (!g.rows.length) { o += '\n—\n'; return; }
+                    o += '\n| Продукт | г | ккал | Б | Ж | У |\n|---|---|---|---|---|---|\n';
+                    g.rows.forEach(r => o += `| ${r.name} | ${r.g} | ${r.k} | ${r.p} | ${r.f} | ${r.c} |\n`);
+                    if (g.title) o += `\n${mini(sum(g.rows))}\n`;
+                });
+                return o;
+            },
+            txt(d) {
+                let o = `КБЖУ за ${today}\nИтого: ${line(d.t)}\n`;
+                d.groups.forEach(g => {
+                    if (g.title) o += `\n${g.title.toUpperCase()}\n`; else o += '\n';
+                    g.rows.forEach(r => o += `${r.name} — ${r.g} г: ${r.k} ккал, Б ${r.p}, Ж ${r.f}, У ${r.c}\n`);
+                    if (g.title && g.rows.length) o += `Итого: ${mini(sum(g.rows))}\n`;
+                });
+                return o;
+            },
+            csv(d) {
+                const q = t => `"${String(t ?? '').replace(/"/g, '""')}"`;
+                let o = '\ufeffПриём;Продукт;г;ккал;Б;Ж;У\n';
+                d.groups.forEach(g => g.rows.forEach(r => o += [q(g.title || ''), q(r.name), r.g, r.k, r.p, r.f, r.c].join(';') + '\n'));
+                return o + `;ИТОГО;;${Math.round(d.t.k)};${r1(d.t.p)};${r1(d.t.f)};${r1(d.t.c)}\n`;
+            },
+            html(d) {
+                let o = `<!doctype html><html lang="ru"><head><meta charset="utf-8"><title>КБЖУ ${today}<\/title><style>body{font-family:Arial,sans-serif;max-width:720px;margin:24px auto;color:#111}table{border-collapse:collapse;width:100%;margin:8px 0 16px}td,th{border:1px solid #ccc;padding:6px 8px;text-align:left;font-size:14px}th{background:#f3f3f3}<\/style><\/head><body><h1>КБЖУ за ${today}<\/h1><p><b>Итого:<\/b> ${esc(line(d.t))}<\/p>`;
+                d.groups.forEach(g => {
+                    if (g.title) o += `<h2>${esc(g.title)}<\/h2>`;
+                    if (!g.rows.length) { o += '<p>—<\/p>'; return; }
+                    o += '<table><tr><th>Продукт<\/th><th>г<\/th><th>ккал<\/th><th>Б<\/th><th>Ж<\/th><th>У<\/th><\/tr>';
+                    g.rows.forEach(r => o += `<tr><td>${esc(r.name)}<\/td><td>${r.g}<\/td><td>${r.k}<\/td><td>${r.p}<\/td><td>${r.f}<\/td><td>${r.c}<\/td><\/tr>`);
+                    o += '<\/table>'; if (g.title) o += `<p>${esc(mini(sum(g.rows)))}<\/p>`;
+                });
+                return o + '<\/body><\/html>';
+            }
+        };
+        function saveFile(name, text, type) {
+            const a = el('a', { href: URL.createObjectURL(new Blob([text], { type: type + ';charset=utf-8' })), download: name });
+            a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+        }
+        const FMT = [
+            ['Markdown (.md)', () => saveFile(`kbju-${today}.md`, mk.md(repData()), 'text/markdown')],
+            ['Word (.doc)', () => saveFile(`kbju-${today}.doc`, mk.html(repData()), 'application/msword')],
+            ['PDF (через печать)', () => {
+                const w = window.open('', '_blank'); if (!w) return showErr('Разрешите всплывающие окна');
+                w.document.write(mk.html(repData())); w.document.close(); w.focus(); setTimeout(() => w.print(), 300);
+            }],
+            ['Excel / CSV (.csv)', () => saveFile(`kbju-${today}.csv`, mk.csv(repData()), 'text/csv')],
+            ['Текст (.txt)', () => saveFile(`kbju-${today}.txt`, mk.txt(repData()), 'text/plain')],
+            ['HTML (.html)', () => saveFile(`kbju-${today}.html`, mk.html(repData()), 'text/html')]
+        ];
+        FMT.forEach(([label, fn]) => $('fmts').append(el('button', { className: 'fmt', type: 'button', textContent: label, onclick: fn })));
 
         // ---------- модальное окно ----------
-        function openModal() { $('modal').hidden = false; viewSearch(); }
+        function openModal(meal = null, create = false) { curMeal = meal; $('modal').hidden = false; create ? viewCreate() : viewSearch(); }
         function closeModal() { $('modal').hidden = true; }
 
         function viewSearch() {
@@ -465,7 +826,18 @@
                 if (!found.length) { list.append(el('div', { className: 'msg', textContent: products.length ? 'Ничего не найдено' : 'Продуктов пока нет. Нажмите +, чтобы создать первый.' })); return; }
                 found.forEach(p => {
                     const b = el('button', { className: 'pick', textContent: p.name }, el('span', { textContent: `${p.kcal} ккал · Б ${p.p} · Ж ${p.f} · У ${p.c} на 100 г` }));
-                    b.onclick = () => addEntry(p); list.append(b);
+                    b.onclick = () => addEntry(p);
+                    const x = el('button', { className: 'x', textContent: '×', ariaLabel: 'Удалить продукт' });
+                    x.onclick = () => ask(`Удалить «${p.name}» из базы? Он пропадёт и из сегодняшнего рациона.`, async () => {
+                        try {
+                            const qs = await col('entries').where('product_id', '==', p.id).get();
+                            const batch = fs.batch(); qs.forEach(d => batch.delete(d.ref)); batch.delete(col('products').doc(p.id));
+                            batch.commit().catch(showErr);
+                        } catch (err) { list.prepend(el('div', { className: 'msg', textContent: 'Ошибка: ' + err.message })); return; }
+                        products = products.filter(z => z.id !== p.id); entries = entries.filter(z => z.product_id !== p.id);
+                        render(); fill();
+                    }, 'Удалить');
+                    list.append(el('div', { className: 'prow' }, b, x));
                 });
             };
             q.oninput = fill;
@@ -481,7 +853,7 @@
                 sheet.append(el('label', { textContent: label }), f[key]);
             };
             sheet.append(el('div', { className: 'bar' }, el('strong', { textContent: 'Новый продукт', style: 'flex:1;align-self:center' }),
-                Object.assign(el('button', { className: 'close', textContent: '×', ariaLabel: 'Назад' }), { onclick: viewSearch })));
+                Object.assign(el('button', { className: 'close', textContent: '×', ariaLabel: 'Закрыть' }), { onclick: closeModal })));
             field('name', 'Название', 'text'); field('p', 'Белки, г на 100 г'); field('f', 'Жиры, г на 100 г'); field('c', 'Углеводы, г на 100 г'); field('kcal', 'Калории, ккал на 100 г');
             const auto = el('input', { type: 'checkbox', checked: true });
             sheet.append(el('label', { className: 'chk' }, auto, 'Считать калории автоматически (4·Б + 9·Ж + 4·У)'));
@@ -498,18 +870,16 @@
                 const name = f.name.value.trim();
                 if (!name) { msg.textContent = 'Введите название'; return; }
                 const row = { name, p: +f.p.value || 0, f: +f.f.value || 0, c: +f.c.value || 0, kcal: +f.kcal.value || 0 };
-                save.disabled = true;
-                const { data, error } = await db.from('products').insert(row).select().single();
-                save.disabled = false;
-                if (error) { msg.textContent = 'Ошибка: ' + error.message; return; }
+                const ref = col('products').doc(); const data = { id: ref.id, ...row };
+                ref.set(row).catch(showErr);
                 products.push(data); products.sort((a, b) => a.name.localeCompare(b.name, 'ru'));
-                viewSearch();
+                if (mealsOn) addEntry(data); else viewSearch();
             };
             sheet.append(msg, save); f.name.focus();
         }
 
-        $('add').onclick = openModal;
-        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+        $('add').onclick = () => openModal();
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); toggle(null); $('pmodal').hidden = true; $('cmodal').hidden = true; } });
         init();
     </script>
 </body>
