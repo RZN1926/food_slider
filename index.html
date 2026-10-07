@@ -530,6 +530,9 @@
                 <label class="srow"><span>Разделять по приёмам пищи</span><input type="checkbox" class="sw"
                         id="swMeals"></label>
                 <button class="plain" id="planBtn">Добавить свой план</button>
+                <div class="lbl">Аккаунт</div>
+                <div id="acc" style="color:var(--ink);font-size:14px;margin-top:6px"></div>
+                <button class="plain" id="accBtn" style="margin-top:8px">Войти через Google</button>
             </div>
             <div id="report" hidden>
                 <div>Скачать отчёт за сегодня</div>
@@ -599,8 +602,9 @@
             try {
                 let user = await new Promise(r => { const un = auth.onAuthStateChanged(x => { un(); r(x); }); });
                 if (!user) user = (await auth.signInAnonymously()).user;
-                uid = user.uid;
+                uid = user.uid; renderAcc();
                 const md = (await meta().get()).data() || {};
+                meals = ['Завтрак', 'Обед', 'Ужин'];
                 step = [1, 5, 10].includes(md.step) ? md.step : 5;
                 limit = [500, 1000, 1500, 2000].includes(md.max) ? md.max : 500;
                 mealsOn = !!md.meals_on; if (Array.isArray(md.meals) && md.meals.length) meals = md.meals; plan = md.plan || null;
@@ -737,6 +741,29 @@
             if (!e.composedPath().some(n => ['settings', 'report', 'gear', 'rbtn'].includes(n.id))) toggle(null);
         });
         $('gear').onclick = () => toggle('settings'); $('rbtn').onclick = () => toggle('report');
+
+        // ---------- аккаунт ----------
+        function renderAcc() {
+            const u = auth.currentUser, g = u && !u.isAnonymous;
+            $('acc').textContent = g ? (u.email || u.displayName || 'Google-аккаунт') : 'Гостевой режим: данные только в этом браузере';
+            $('accBtn').textContent = g ? 'Выйти' : 'Войти через Google';
+        }
+        $('accBtn').onclick = async () => {
+            const u = auth.currentUser; if (!u) return;
+            if (!u.isAnonymous) {
+                toggle(null);
+                ask('Выйти из аккаунта? Данные останутся в облаке и вернутся при следующем входе.', async () => { await auth.signOut(); location.reload(); }, 'Выйти');
+                return;
+            }
+            try {
+                try { await u.linkWithPopup(new firebase.auth.GoogleAuthProvider()); }
+                catch (e) {
+                    if (e.code === 'auth/credential-already-in-use' && e.credential) { await auth.signInWithCredential(e.credential); await init(); }
+                    else throw e;
+                }
+                renderAcc(); showErr(null);
+            } catch (e) { showErr(e); }
+        };
 
         // ---------- отчёт ----------
         const esc = t => String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
